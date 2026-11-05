@@ -1,13 +1,67 @@
 {
-    "atomType": "Molecule",
-    "x": 0,
-    "y": 0,
-    "uniqueID": "id-2608",
-    "name": "move_to_positive_quadrant",
-    "topLevel": true,
-    "allAtoms": [],
-    "allConnectors": [],
-    "unitsKey": "Unitless",
-    "fileTypeVersion": 1,
-    "filetypeVersion": 1
+  "atomType": "Molecule",
+  "x": 0,
+  "y": 0,
+  "uniqueID": "id-2608",
+  "name": "move_to_positive_quadrant",
+  "ioValues": [
+    {
+      "name": "toMove",
+      "ioValue": 10
+    }
+  ],
+  "topLevel": true,
+  "allAtoms": [
+    {
+      "atomType": "Output",
+      "x": 0.98,
+      "y": 0.5,
+      "uniqueID": "id-2609",
+      "ioValues": [
+        {
+          "name": "number or geometry",
+          "ioValue": "__GEOMETRY_INPUT__"
+        }
+      ]
+    },
+    {
+      "atomType": "Input",
+      "x": 0.0254,
+      "y": 0.32,
+      "uniqueID": "id-2611",
+      "name": "toMove",
+      "type": "geometry",
+      "options": []
+    },
+    {
+      "atomType": "Code",
+      "x": 0.3268,
+      "y": 0.4286,
+      "uniqueID": "id-2614",
+      "ioValues": [
+        {
+          "name": "shape",
+          "ioValue": 10
+        }
+      ],
+      "interpreterVersion": 1,
+      "code": "function run(shape: Assembly) {\n  let left = Number.POSITIVE_INFINITY\n  let south = Number.POSITIVE_INFINITY\n  let under = Number.POSITIVE_INFINITY\n  shape.onLeafs((leaf) => {\n    const bounds = leaf.geometry.boundingBox.bounds;\n    left = Math.min(left, bounds[0][0])\n    south = Math.min(south, bounds[0][1])\n    const zbound = bounds[0][2];\n    under = zbound != undefined ? Math.min(under, zbound) : under\n    return leaf;\n  })\n  console.log(`left: ${left}, south: ${south}, under ${under}`)\n  under = under == Number.POSITIVE_INFINITY ? 0 : under;\n  return shape.onLeafs((leaf) => {\n    leaf.geometry = leaf.geometry.translate(-1 * left, -1 * south, -1 * under)\n    return leaf;\n  })\n}",
+      "compiledCode": "\"use strict\";\nfunction run(shape) {\n    let left = Number.POSITIVE_INFINITY;\n    let south = Number.POSITIVE_INFINITY;\n    let under = Number.POSITIVE_INFINITY;\n    shape.onLeafs((leaf) => {\n        const bounds = leaf.geometry.boundingBox.bounds;\n        left = Math.min(left, bounds[0][0]);\n        south = Math.min(south, bounds[0][1]);\n        const zbound = bounds[0][2];\n        under = zbound != undefined ? Math.min(under, zbound) : under;\n        return leaf;\n    });\n    console.log(`left: ${left}, south: ${south}, under ${under}`);\n    under = under == Number.POSITIVE_INFINITY ? 0 : under;\n    return shape.onLeafs((leaf) => {\n        leaf.geometry = leaf.geometry.translate(-1 * left, -1 * south, -1 * under);\n        return leaf;\n    });\n}\n"
+    }
+  ],
+  "allConnectors": [
+    {
+      "ap2Name": "shape",
+      "ap1ID": "id-2611",
+      "ap2ID": "id-2614"
+    },
+    {
+      "ap2Name": "number or geometry",
+      "ap1ID": "id-2614",
+      "ap2ID": "id-2609"
+    }
+  ],
+  "unitsKey": "Unitless",
+  "fileTypeVersion": 1,
+  "filetypeVersion": 1
 }
